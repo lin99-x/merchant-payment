@@ -26,6 +26,8 @@ public class MerchantUser implements Serializable {
 
     private String email;
 
+    private String name;
+
     @JsonIgnore
     private String passwordHash;
 
