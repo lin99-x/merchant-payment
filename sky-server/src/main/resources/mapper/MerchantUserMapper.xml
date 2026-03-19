@@ -11,4 +11,43 @@
             </where>
             order by created_at desc
         </select>
+
+        <!-- updateMerchantUser -->
+
+        <update id="updateMerchantUser" parameterType="com.sky.entity.MerchantUser">
+             UPDATE merchant_users
+             <set>
+                <if test="merchantId != null">
+                    merchant_id = #{merchantId},
+                </if>
+                <if test="email != null">
+                    email = #{email},
+                </if>
+                <if test="passwordHash != null">
+                    password_hash = #{passwordHash},
+                </if>
+                <if test="role != null">
+                    role = #{role},
+                </if>
+                <if test="isActive != null">
+                    is_active = #{isActive},
+                </if>
+                <if test="failedLoginAttempts != null">
+                    failed_login_attempts = #{failedLoginAttempts},
+                </if>
+                <if test="lockedUntil != null">
+                    locked_until = #{lockedUntil},
+                </if>
+                <if test="lastLoginAt != null">
+                    last_login_at = #{lastLoginAt},
+                </if>
+                <if test="updatedAt != null">
+                    updated_at = #{updatedAt},
+                </if>
+                <if test="name != null">
+                    name = #{name},
+                </if>
+             </set>
+             where id = #{id}
+        </update>
 </mapper>

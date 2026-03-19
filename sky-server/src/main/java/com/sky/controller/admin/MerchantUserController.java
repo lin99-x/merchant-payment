@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * MerchantUserController
@@ -95,7 +97,7 @@ public class MerchantUserController {
      */
     @PostMapping
     @Operation(summary = "Add new merchant user")
-    public Result addMerchantUser(@RequestBody MerchantUserDTO merchantUserDTO) {
+    public Result<String> addMerchantUser(@RequestBody MerchantUserDTO merchantUserDTO) {
         log.info("Adding new merchant user: {}", merchantUserDTO);
 
         merchantUserService.addMerchantUser(merchantUserDTO);
@@ -110,6 +112,7 @@ public class MerchantUserController {
      * @return
      */
     @GetMapping("/page")
+    @Operation(summary = "Page query merchant users")
     public Result<PageResult> pageQueryMerchantUsers(@ParameterObject MerchantUserPageQueryDTO merchantUserPageQueryDTO) {
         log.info("Page query merchant users: {}", merchantUserPageQueryDTO);
 
@@ -117,5 +120,23 @@ public class MerchantUserController {
 
         return Result.success(pageResult);
     }
+
+    /**
+     * Activate or deactivate merchant user account
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @Operation(summary = "Activate or deactivate merchant user account")
+    public Result<String> updateMerchantUserStatus(@PathVariable Integer status, UUID id) {
+        log.info("Updating merchant user status: id={}, status={}", id, status);
+
+        merchantUserService.updateMerchantUserStatus(status, id);
+
+        return Result.success();
+    }
+
 
 }

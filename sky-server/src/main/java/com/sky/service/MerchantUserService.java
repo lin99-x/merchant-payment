@@ -1,5 +1,7 @@
 package com.sky.service;
 
+import java.util.UUID;
+
 import com.sky.dto.MerchantUserDTO;
 import com.sky.dto.MerchantUserLoginDTO;
 import com.sky.dto.MerchantUserPageQueryDTO;
@@ -28,4 +30,10 @@ public interface MerchantUserService {
      */
     PageResult pageQueryMerchantUsers(MerchantUserPageQueryDTO merchantUserPageQueryDTO);
 
+    /**
+     * Activate or deactivate merchant user account
+     * @param status
+     * @param id
+     */
+    void updateMerchantUserStatus(Integer status, UUID id);
 }

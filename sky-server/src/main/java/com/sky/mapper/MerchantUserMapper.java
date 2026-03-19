@@ -33,26 +33,6 @@ public interface MerchantUserMapper {
     @Update("update merchant_users set failed_login_attempts = 0, locked_until = null, last_login_at = now() where id = #{userId}")
     void resetFailedLoginAttempts(UUID userId);
 
-    /**
-     * Lock account after failed login attempts
-     *
-     * @param userId
-     * @param failedLoginAttempts
-     * @param lockedUntil
-     */
-    @Update("update merchant_users set failed_login_attempts = #{failedLoginAttempts}, locked_until = #{lockedUntil}, updated_at = now() where id = #{userId}")
-    void lockAccount(@Param("id") UUID userId, @Param("failedLoginAttempts") int failedLoginAttempts,
-            @Param("lockedUntil") OffsetDateTime lockedUntil);
-
-    /**
-     * Update failed login attempts
-     *
-     * @param userId
-     * @param failedLoginAttempts
-     */
-    @Update("update merchant_users set failed_login_attempts = #{failedLoginAttempts}, updated_at = now() where id = #{userId}")
-    void updateFailedLoginAttempts(@Param("id") UUID userId, @Param("failedLoginAttempts") int failedLoginAttempts);
-
     @Insert("insert into merchant_users (merchant_id, email, password_hash, role, is_active, failed_login_attempts, locked_until, last_login_at, created_at, updated_at) " +
             "values (#{merchantId}, #{email}, #{passwordHash}, #{role}::user_role, #{isActive}, #{failedLoginAttempts}, #{lockedUntil}, #{lastLoginAt}, now(), now())")
     void insert(MerchantUser merchantUser);
@@ -64,5 +44,7 @@ public interface MerchantUserMapper {
      * @return
      */
 	List<MerchantUser> pageQueryMerchantUsers(MerchantUserPageQueryDTO merchantUserPageQueryDTO);
+
+    void updateMerchantUser(MerchantUser merchantUser);
 
 }
