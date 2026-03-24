@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 /**
  * MerchantUserController
@@ -138,5 +140,33 @@ public class MerchantUserController {
         return Result.success();
     }
 
+    /**
+     * Get merchant user by ID
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @Operation(summary = "Get merchant user by ID")
+    public Result<MerchantUser> getMerchantUserById(@PathVariable UUID id) {
+        MerchantUser merchantUser = merchantUserService.getMerchantUserById(id);
+        return Result.success(merchantUser);
+    }
+
+    /**
+     * Update merchant user information
+     *
+     * @param merchantUserDTO
+     * @return
+     */
+    @PutMapping
+    @Operation(summary = "Update merchant user information")
+    public Result<String> updateMerchantUser(@RequestBody MerchantUserDTO merchantUserDTO) {
+        log.info("Modifying merchant user information: {}", merchantUserDTO);
+
+        merchantUserService.updateMerchantUser(merchantUserDTO);
+
+        return Result.success();
+    }
 
 }

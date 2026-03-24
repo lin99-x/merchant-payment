@@ -47,4 +47,6 @@ public interface MerchantUserMapper {
 
     void updateMerchantUser(MerchantUser merchantUser);
 
+    MerchantUser getById(UUID id);
+
 }

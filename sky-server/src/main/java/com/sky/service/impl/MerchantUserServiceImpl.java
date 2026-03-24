@@ -19,6 +19,7 @@ import com.sky.service.MerchantUserService;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +76,25 @@ public class MerchantUserServiceImpl implements MerchantUserService {
         return merchantUser;
     }
 
+    /**
+     * Handle failed login attempt
+     *
+     * @param merchantUser
+     */
     public void handleFailedLoginAttempt(MerchantUser merchantUser) {
         int attempts = merchantUser.getFailedLoginAttempts() + 1;
+
         if (attempts >= SecurityConstant.MAX_FAILED_LOGIN_ATTEMPTS) {
             // Lock account for 15 minutes
-            merchantUserMapper.lockAccount(merchantUser.getId(), attempts, OffsetDateTime.now().plusMinutes(SecurityConstant.LOCK_MINUTES));
+            merchantUser.setLockedUntil(OffsetDateTime.now().plusMinutes(SecurityConstant.LOCK_MINUTES));
+            merchantUser.setFailedLoginAttempts(attempts);
         } else {
             // Update failed login attempts
-            merchantUserMapper.updateFailedLoginAttempts(merchantUser.getId(), attempts);
+            merchantUser.setFailedLoginAttempts(attempts);
         }
+
+        // Update user record
+        merchantUserMapper.updateMerchantUser(merchantUser);
     }
 
     /**
@@ -108,6 +119,12 @@ public class MerchantUserServiceImpl implements MerchantUserService {
         merchantUserMapper.insert(merchantUser);
     }
 
+    /**
+     * Page query merchant users
+     *
+     * @param merchantUserPageQueryDTO
+     * @return
+     */
     public PageResult pageQueryMerchantUsers(MerchantUserPageQueryDTO merchantUserPageQueryDTO) {
         // Start pagination
         PageHelper.startPage(merchantUserPageQueryDTO.getPage(), merchantUserPageQueryDTO.getPageSize());
@@ -116,5 +133,46 @@ public class MerchantUserServiceImpl implements MerchantUserService {
         PageInfo<MerchantUser> pageInfo = new PageInfo<>(records);
 
         return new PageResult(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * Activate or deactivate merchant user account
+     *
+     * @param status
+     * @param id
+     */
+    public void updateMerchantUserStatus(Integer status, UUID id) {
+        boolean isActive = status == 1 ? StatusConstant.ENABLE : StatusConstant.DISABLE;
+
+        MerchantUser merchantUser = new MerchantUser();
+        merchantUser.setId(id);
+        merchantUser.setIsActive(isActive);
+
+        merchantUserMapper.updateMerchantUser(merchantUser);
+    }
+
+    /**
+     * Get merchant user by ID
+     *
+     * @param id
+     * @return
+     */
+    public MerchantUser getMerchantUserById(UUID id) {
+        MerchantUser merchantUser = merchantUserMapper.getById(id);
+
+        return merchantUser;
+    }
+
+    /**
+     * Update merchant user information
+     * @param merchantUserDTO
+     */
+    public void updateMerchantUser(MerchantUserDTO merchantUserDTO) {
+        MerchantUser merchantUser = new MerchantUser();
+        BeanUtils.copyProperties(merchantUserDTO, merchantUser);
+
+        merchantUser.setUpdatedAt(OffsetDateTime.now());
+        
+        merchantUserMapper.updateMerchantUser(merchantUser);
     }
 }

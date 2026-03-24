@@ -36,4 +36,17 @@ public interface MerchantUserService {
      * @param id
      */
     void updateMerchantUserStatus(Integer status, UUID id);
+
+    /**
+     * Get merchant user by ID
+     * @param id
+     * @return
+     */
+    MerchantUser getMerchantUserById(UUID id);
+
+    /**
+     * Update merchant user information
+     * @param merchantUserDTO
+     */
+    void updateMerchantUser(MerchantUserDTO merchantUserDTO);
 }
