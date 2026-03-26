@@ -171,8 +171,8 @@ public class MerchantUserServiceImpl implements MerchantUserService {
         MerchantUser merchantUser = new MerchantUser();
         BeanUtils.copyProperties(merchantUserDTO, merchantUser);
 
-        merchantUser.setUpdatedAt(OffsetDateTime.now());
-        
+        // merchantUser.setUpdatedAt(OffsetDateTime.now());
+
         merchantUserMapper.updateMerchantUser(merchantUser);
     }
 }

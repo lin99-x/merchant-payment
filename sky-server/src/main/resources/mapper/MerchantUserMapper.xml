@@ -50,4 +50,14 @@
              </set>
              where id = #{id}
         </update>
+
+    <!-- getById -->
+
+    <select id="getById" resultType="com.sky.entity.MerchantUser">
+        SELECT * FROM merchant_users
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
 </mapper>

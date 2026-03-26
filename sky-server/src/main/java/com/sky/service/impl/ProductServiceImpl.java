@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService{
         Product product = new Product();
         BeanUtils.copyProperties(productDTO, product);
         product.setId(id);
-        product.setUpdatedAt(OffsetDateTime.now());
+        // product.setUpdatedAt(OffsetDateTime.now());
 
         productMapper.update(product);
     }

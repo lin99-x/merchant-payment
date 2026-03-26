@@ -1,7 +1,9 @@
 package com.sky.mapper;
 
+import com.sky.annotation.AutoFill;
 import com.sky.dto.MerchantUserPageQueryDTO;
 import com.sky.entity.MerchantUser;
+import com.sky.enumeration.OperationType;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -33,6 +35,7 @@ public interface MerchantUserMapper {
 
     @Insert("insert into merchant_users (merchant_id, email, password_hash, role, is_active, failed_login_attempts, locked_until, last_login_at, created_at, updated_at) " +
             "values (#{merchantId}, #{email}, #{passwordHash}, #{role}::user_role, #{isActive}, #{failedLoginAttempts}, #{lockedUntil}, #{lastLoginAt}, now(), now())")
+    @AutoFill(value = OperationType.INSERT)
     void insert(MerchantUser merchantUser);
 
     /**
@@ -43,6 +46,7 @@ public interface MerchantUserMapper {
      */
 	List<MerchantUser> pageQueryMerchantUsers(MerchantUserPageQueryDTO merchantUserPageQueryDTO);
 
+    @AutoFill(value = OperationType.UPDATE)
     void updateMerchantUser(MerchantUser merchantUser);
 
     MerchantUser getById(UUID id);
