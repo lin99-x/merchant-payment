@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.mapper.OrderItemMapper">
+
+    <!-- insertBatch -->
+    <insert id="insertBatch">
+        <foreach collection="orderItems" item="item" separator=";">
+            INSERT INTO order_items (order_id, product_id, quantity, unit_price, subtotal)
+            VALUES (#{item.orderId}, #{item.productId}, #{item.quantity}, #{item.unitPrice}, #{item.subtotal})
+        </foreach>
+    </insert>
+
+    <!-- selectByOrderId -->
+
+    <select id="selectByOrderId" resultType="com.sky.entity.OrderItem">
+        SELECT id, order_id, product_id, quantity, unit_price, subtotal
+        FROM order_items
+        WHERE order_id = #{orderId}
+    </select>
+
+</mapper>

@@ -1,22 +1,41 @@
 package com.sky.vo;
 
-import com.sky.entity.OrderDetail;
-import com.sky.entity.Orders;
+import com.sky.entity.OrderItem;
+import com.sky.enumeration.OrderStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderVO extends Orders implements Serializable {
+public class OrderVO implements Serializable {
 
-    //订单菜品信息
-    private String orderDishes;
+    private UUID id;
 
-    //订单详情
-    private List<OrderDetail> orderDetailList;
+    private UUID merchantId;
+
+    private UUID customerId;
+
+    private UUID paymentId;
+
+    private String notes;
+
+    private OrderStatus status;
+
+    private Long total;
+
+    private String currency;
+
+    private List<OrderItem> orderItems;
+
+    private OffsetDateTime createdAt;
+
+    private OffsetDateTime updatedAt;
 
 }
