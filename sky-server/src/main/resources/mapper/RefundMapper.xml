@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.mapper.RefundMapper">
+
+
+    <!-- selectById -->
+
+    <select id="selectById">
+        SELECT * FROM refunds
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- selectByPaymentId -->
+
+    <select id="selectByPaymentId">
+        SELECT * FROM refunds
+        WHERE payment_id = #{paymentId}
+    </select>
+
+    <!-- insert -->
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO refunds (payment_id,idempotency_key, amount, reason, status, created_at, updated_at)
+        VALUES (#{paymentId}, #{idempotencyKey}, #{amount}, #{reason}, #{status}::refund_status, #{createdAt}, #{updatedAt})
+    </insert>
+
+
+    <!-- update -->
+
+    <update id="update">
+        UPDATE refunds
+        <set>
+            <if test="paymentId != null">
+                payment_id = #{paymentId},
+            </if>
+            <if test="idempotencyKey != null">
+                idempotency_key = #{idempotencyKey},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="status != null">
+                status = #{status}::refund_status,
+            </if>
+            <if test="refundedAt != null">
+                refunded_at = #{refundedAt},
+            </if>
+            updated_at = #{updatedAt}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- selectByQuery -->
+
+    <select id="selectByQuery">
+        SELECT * FROM refunds
+        <where>
+            <if test="paymentId != null">
+                AND payment_id = #{paymentId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}::refund_status
+            </if>
+            <if test="startTime != null">
+                AND created_at &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND created_at &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+</mapper>
