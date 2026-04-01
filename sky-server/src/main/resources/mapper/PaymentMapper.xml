@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.mapper.PaymentMapper">
+
+    <!-- selectById -->
+
+    <select id="selectById">
+        SELECT * FROM payments
+        WHERE id = #{id}
+    </select>
+
+    <!-- selectByQuery -->
+
+    <select id="selectByQuery">
+        SELECT * FROM payments
+        <where>
+            <if test="status != null">
+                AND status = #{status}::payment_status
+            </if>
+            <if test="orderId != null">
+                AND order_id = #{orderId}
+            </if>
+            <if test="customerId != null">
+                AND customer_id = #{customerId}
+            </if>
+            <if test="merchantId != null">
+                AND merchant_id = #{merchantId}
+            </if>
+            <if test="startTime != null">
+                AND created_at &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND created_at &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- update -->
+
+    <update id="update">
+        UPDATE payments
+        <set>
+            <if test="paymentMethodId != null">
+                payment_method = #{paymentMethodId},
+            </if>
+            <if test="idempotencyKey != null">
+                idempotency_key = #{idempotencyKey},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="currency != null">
+                currency = #{currency},
+            </if>
+            <if test="status != null">
+                status = #{status}::payment_status,
+            </if>
+            <if test="paidAt != null">
+                paid_at = #{paidAt},
+            </if>
+            <if test="updatedAt != null">
+                updated_at = #{updatedAt},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- insert -->
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO payments (merchant_id, customer_id, payment_method_id, idempotency_key, amount, currency, description, status, paid_at, created_at, updated_at)
+        VALUES (#{merchantId}, #{customerId}, #{paymentMethodId}, #{idempotencyKey}, #{amount}, #{currency}, #{description}, #{status}::payment_status, #{paidAt}, #{createdAt}, #{updatedAt})
+    </insert>
+
+</mapper>
